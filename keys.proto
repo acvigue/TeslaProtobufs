@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option java_outer_classname = "keys";
+option java_package = "com.teslamotors.protocol";
+
+enum Role {
+  ROLE_NONE = 0;
+  ROLE_SERVICE = 1;
+  ROLE_OWNER = 2;
+  ROLE_DRIVER = 3;
+  ROLE_FM = 4;
+  ROLE_VEHICLE_MONITOR = 5;
+  ROLE_CHARGING_MANAGER = 6;
+}

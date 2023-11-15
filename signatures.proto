@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+option java_outer_classname = "signatures";
+option java_package = "com.teslamotors.protocol";
+
+message AES_GCM_Personalized_Signature_Data {
+  bytes epoch = 1;
+  bytes nonce = 2;
+  uint32 counter = 3;
+  fixed32 expires_at = 4;
+  bytes tag = 5;
+}
+
+message AES_GCM_Response_Signature_Data {
+  bytes nonce = 1;
+  uint32 counter = 2;
+  bytes tag = 3;
+}
+
+message GetSessionInfoRequest {
+  KeyIdentity key_identity = 1;
+}
+
+message HMAC_Personalized_Signature_Data {
+  bytes epoch = 1;
+  uint32 counter = 2;
+  fixed32 expires_at = 3;
+  bytes tag = 4;
+}
+
+message HMAC_Signature_Data {
+  bytes tag = 1;
+}
+
+message KeyIdentity {
+  oneof sub_message {
+    bytes public_key = 1;
+    bytes key_id = 2;
+  }
+}
+
+message Present_Key_Signature_Data {
+  bytes auth_token = 1;
+}
+
+message RSA_Signature_Data {
+  fixed32 expires_at = 1;
+  bytes signature = 2;
+}
+
+message SessionInfo {
+  uint32 counter = 1;
+  bytes publicKey = 2;
+  bytes epoch = 3;
+  fixed32 clock_time = 4;
+  Session_Info_Status status = 5;
+}
+
+enum Session_Info_Status {
+  SESSION_INFO_STATUS_OK = 0;
+  SESSION_INFO_STATUS_KEY_NOT_ON_WHITELIST = 1;
+}
+
+message SignatureData {
+  KeyIdentity signer_identity = 1;
+  oneof sub_message {
+    Present_Key_Signature_Data Present_Key_data = 2;
+    AES_GCM_Personalized_Signature_Data AES_GCM_Personalized_data = 5;
+    HMAC_Signature_Data session_info_tag = 6;
+    RSA_Signature_Data RSA_data = 7;
+    HMAC_Personalized_Signature_Data HMAC_Personalized_data = 8;
+    AES_GCM_Response_Signature_Data AES_GCM_Response_data = 9;
+  }
+}

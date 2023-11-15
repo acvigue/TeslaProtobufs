@@ -1,0 +1,406 @@
+syntax = "proto3";
+
+import "common.proto";
+import "signatures.proto";
+import "vehicle.proto";
+import "universal_message.proto";
+
+option java_outer_classname = "car_server";
+option java_package = "com.teslamotors.protocol";
+
+enum HvacSeatCoolerActions_HvacSeatCoolerLevel_E {
+  HvacSeatCoolerLevel_Unknown = 0;
+  HvacSeatCoolerLevel_Off = 1;
+  HvacSeatCoolerLevel_Low = 2;
+  HvacSeatCoolerLevel_Med = 3;
+  HvacSeatCoolerLevel_High = 4;
+}
+
+enum HvacSeatCoolerActions_HvacSeatCoolerPosition_E {
+  HvacSeatCoolerPosition_Unknown = 0;
+  HvacSeatCoolerPosition_FrontLeft = 1;
+  HvacSeatCoolerPosition_FrontRight = 2;
+}
+
+enum HvacSetPreconditioningMaxAction_ManualOverrideMode_E {
+  HvacSetPreconditioningMaxAction_DogMode = 0;
+  HvacSetPreconditioningMaxAction_Soc = 1;
+  HvacSetPreconditioningMaxAction_Doors = 2;
+}
+
+enum AutoSeatClimateAction_AutoSeatPosition_E {
+  AutoSeatPosition_Unknown = 0;
+  AutoSeatPosition_FrontLeft = 1;
+  AutoSeatPosition_FrontRight = 2;
+}
+
+enum HvacClimateKeeperAction_ClimateKeeperAction_E {
+  ClimateKeeperAction_Off = 0;
+  ClimateKeeperAction_On = 1;
+  ClimateKeeperAction_Dog = 2;
+  ClimateKeeperAction_Camp = 3;
+}
+
+message Action {
+  oneof action_msg {
+    VehicleAction vehicleAction = 2;
+  }
+}
+
+message VehicleAction {
+  oneof vehicle_action_msg {
+    VehicleAction_ChargingSetLimitAction chargingSetLimitAction = 5;
+    VehicleAction_ChargingStartStopAction chargingStartStopAction = 6;
+    VehicleAction_DrivingClearSpeedLimitPinAction drivingClearSpeedLimitPinAction = 7;
+    VehicleAction_DrivingSetSpeedLimitAction drivingSetSpeedLimitAction = 8;
+    VehicleAction_DrivingSpeedLimitAction drivingSpeedLimitAction = 9;
+    VehicleAction_HvacAutoAction hvacAutoAction = 10;
+    VehicleAction_HvacSetPreconditioningMaxAction hvacSetPreconditioningMaxAction = 12;
+    VehicleAction_HvacSteeringWheelHeaterAction hvacSteeringWheelHeaterAction = 13;
+    VehicleAction_HvacTemperatureAdjustmentAction hvacTemperatureAdjustmentAction = 14;
+    VehicleAction_MediaUpdateVolume mediaUpdateVolume = 16;
+    VehicleAction_MediaNextFavorite mediaNextFavorite = 17;
+    VehicleAction_MediaPreviousFavorite mediaPreviousFavorite = 18;
+    VehicleAction_MediaNextTrack mediaNextTrack = 19;
+    VehicleAction_MediaPreviousTrack mediaPreviousTrack = 20;
+    VehicleAction_GetNearbyChargingSites getNearbyChargingSites = 23;
+    VehicleAction_VehicleControlCancelSoftwareUpdateAction vehicleControlCancelSoftwareUpdateAction = 25;
+    VehicleAction_VehicleControlFlashLightsAction vehicleControlFlashLightsAction = 26;
+    VehicleAction_VehicleControlHonkHornAction vehicleControlHonkHornAction = 27;
+    VehicleAction_VehicleControlResetValetPinAction vehicleControlResetValetPinAction = 28;
+    VehicleAction_VehicleControlScheduleSoftwareUpdateAction vehicleControlScheduleSoftwareUpdateAction = 29;
+    VehicleAction_VehicleControlSetSentryModeAction vehicleControlSetSentryModeAction = 30;
+    VehicleAction_VehicleControlSetValetModeAction vehicleControlSetValetModeAction = 31;
+    VehicleAction_VehicleControlSunroofOpenCloseAction vehicleControlSunroofOpenCloseAction = 32;
+    VehicleAction_VehicleControlTriggerHomelinkAction vehicleControlTriggerHomelinkAction = 33;
+    VehicleAction_VehicleControlWindowAction vehicleControlWindowAction = 34;
+    VehicleAction_HvacBioweaponModeAction hvacBioweaponModeAction = 35;
+    VehicleAction_HvacSeatHeaterActions hvacSeatHeaterActions = 36;
+    VehicleAction_ScheduledChargingAction scheduledChargingAction = 41;
+    VehicleAction_ScheduledDepartureAction scheduledDepartureAction = 42;
+    VehicleAction_SetChargingAmpsAction setChargingAmpsAction = 43;
+    VehicleAction_HvacClimateKeeperAction hvacClimateKeeperAction = 44;
+    Ping ping = 46;
+    VehicleAction_AutoSeatClimateAction autoSeatClimateAction = 48;
+    VehicleAction_HvacSeatCoolerActions hvacSeatCoolerActions = 49;
+    VehicleAction_SetCabinOverheatProtectionAction setCabinOverheatProtectionAction = 50;
+    VehicleAction_SetVehicleNameAction setVehicleNameAction = 54;
+    VehicleAction_ChargePortDoorClose chargePortDoorClose = 61;
+    VehicleAction_ChargePortDoorOpen chargePortDoorOpen = 62;
+    VehicleState_GuestMode guestModeAction = 65;
+    VehicleAction_SetCopTempAction setCopTempAction = 66;
+    VehicleAction_EraseUserDataAction eraseUserDataAction = 72;
+    VehicleAction_VehicleControlSetPinToDriveAction vehicleControlSetPinToDriveAction = 77;
+    VehicleAction_VehicleControlResetPinToDriveAction vehicleControlResetPinToDriveAction = 78;
+  }
+}
+
+message VehicleAction_EraseUserDataAction {
+  string reason = 1;
+}
+
+message Response {
+  ActionStatus actionStatus = 1;
+  oneof response_msg {
+    Response_GetSessionInfoResponse getSessionInfoResponse = 3;
+    Response_GetNearbyChargingSites getNearbyChargingSites = 5;
+    Response_Ping ping = 9;
+  }
+}
+
+message Response_GetSessionInfoResponse {
+  SessionInfo getSessionInfoResponse = 3;
+}
+
+message Response_GetNearbyChargingSites {
+  NearbyChargingSites getNearbyChargingSites = 5;
+}
+
+message Response_Ping {
+  Ping ping = 9;
+}
+
+message ActionStatus {
+  OperationStatus_E result = 1;
+  ResultReason result_reason = 2;
+}
+
+message ResultReason {
+  oneof reason {
+    string plain_text = 1;
+  }
+}
+
+message EncryptedData {
+  int32 field_number = 1;
+  bytes ciphertext = 2;
+  bytes tag = 3;
+}
+
+message VehicleAction_ChargingSetLimitAction {
+  int32 percent = 1;
+}
+
+message VehicleAction_ChargingStartStopAction {
+  oneof charging_action {
+    Void unknown = 1;
+    Void start = 2;
+    Void start_standard = 3;
+    Void start_max_range = 4;
+    Void stop = 5;
+  }
+}
+
+message VehicleAction_DrivingClearSpeedLimitPinAction {
+  string pin = 1;
+}
+
+message VehicleAction_DrivingSetSpeedLimitAction {
+  float limit_mph = 1;
+}
+
+message VehicleAction_DrivingSpeedLimitAction {
+  bool activate = 1;
+  string pin = 2;
+}
+
+message VehicleAction_HvacAutoAction {
+  bool power_on = 1;
+  bool manual_override = 2;
+}
+
+message VehicleAction_HvacSeatHeaterActions {
+  repeated HvacSeatHeaterActions_HvacSeatHeaterAction hvacSeatHeaterAction = 1;
+}
+
+message VehicleAction_HvacSeatCoolerActions {
+  repeated HvacSeatCoolerActions_HvacSeatCoolerAction hvacSeatCoolerAction = 1;
+}
+
+message HvacSeatCoolerActions_HvacSeatCoolerAction {
+  HvacSeatCoolerActions_HvacSeatCoolerLevel_E seat_cooler_level = 1;
+  HvacSeatCoolerActions_HvacSeatCoolerPosition_E seatPosition = 2;
+}
+
+message VehicleAction_HvacSetPreconditioningMaxAction {
+  bool on = 1;
+  bool manual_override = 2;
+  repeated HvacSetPreconditioningMaxAction_ManualOverrideMode_E manual_override_mode = 3;
+}
+
+message VehicleAction_HvacSteeringWheelHeaterAction {
+  bool power_on = 1;
+}
+
+message VehicleAction_HvacTemperatureAdjustmentAction {
+  float delta_celsius = 1;
+  sint32 delta_percent = 2;
+  float absolute_celsius = 3;
+  HvacTemperatureAdjustmentAction_Temperature level = 5;
+  repeated HvacTemperatureAdjustmentAction_HvacTemperatureZone hvac_temperature_zone = 4;
+  float driver_temp_celsius = 6;
+  float passenger_temp_celsius = 7;
+}
+
+message VehicleAction_GetNearbyChargingSites {
+  bool include_meta_data = 1;
+  int32 radius = 2;
+  int32 count = 3;
+}
+
+message NearbyChargingSites {
+  Timestamp timestamp = 1;
+  repeated Superchargers superchargers = 3;
+  int64 congestion_sync_time_utc_secs = 4;
+}
+
+message Superchargers {
+  int64 id = 1;
+  string amenities = 2;
+  int32 available_stalls = 3;
+  string billing_info = 4;
+  string billing_time = 5;
+  string city = 6;
+  string country = 7;
+  float distance_miles = 8;
+  string district = 9;
+  LatLong location = 10;
+  string name = 11;
+  string postal_code = 12;
+  bool site_closed = 13;
+  string state = 14;
+  string street_address = 15;
+  int32 total_stalls = 16;
+  bool within_range = 17;
+  int32 max_power_kw = 18;
+  int32 out_of_order_stalls_number = 19;
+  string out_of_order_stalls_names = 20;
+}
+
+message VehicleAction_MediaUpdateVolume {
+  oneof media_volume {
+    sint32 volume_delta = 1;
+    float volume_absolute_float = 3;
+  }
+}
+
+message VehicleAction_MediaNextFavorite {}
+
+message VehicleAction_MediaPreviousFavorite {}
+
+message VehicleAction_MediaNextTrack {}
+
+message VehicleAction_MediaPreviousTrack {}
+
+message VehicleAction_VehicleControlCancelSoftwareUpdateAction {}
+
+message VehicleAction_VehicleControlFlashLightsAction {}
+
+message VehicleAction_VehicleControlHonkHornAction {}
+
+message VehicleAction_VehicleControlResetValetPinAction {}
+
+message VehicleAction_VehicleControlScheduleSoftwareUpdateAction {
+  int32 offset_sec = 1;
+}
+
+message VehicleAction_VehicleControlSetSentryModeAction {
+  bool on = 1;
+}
+
+message VehicleAction_VehicleControlSetValetModeAction {
+  bool on = 1;
+  string password = 2;
+}
+
+message VehicleAction_VehicleControlSunroofOpenCloseAction {
+  oneof sunroof_level {
+    int32 absolute_level = 1;
+    sint32 delta_level = 2;
+  }
+  oneof action {
+    Void vent = 3;
+    Void close = 4;
+    Void open = 5;
+  }
+}
+
+message VehicleAction_VehicleControlTriggerHomelinkAction {
+  LatLong location = 1;
+  string token = 2;
+}
+
+message VehicleAction_VehicleControlWindowAction {
+  LatLong location = 1;
+  oneof action {
+    Void unknown = 2;
+    Void vent = 3;
+    Void close = 4;
+  }
+}
+
+message VehicleAction_HvacBioweaponModeAction {
+  bool on = 1;
+  bool manual_override = 2;
+}
+
+message VehicleAction_AutoSeatClimateAction {
+  repeated AutoSeatClimateAction_CarSeat carseat = 1;
+}
+
+message Ping {
+  int32 ping_id = 1;
+  Timestamp local_timestamp = 2;
+  Timestamp last_remote_timestamp = 3;
+}
+
+message VehicleAction_ScheduledChargingAction {
+  bool enabled = 1;
+  int32 charging_time = 2;
+}
+
+message VehicleAction_ScheduledDepartureAction {
+  bool enabled = 1;
+  int32 departure_time = 2;
+  PreconditioningTimes preconditioning_times = 3;
+  OffPeakChargingTimes off_peak_charging_times = 4;
+  int32 off_peak_hours_end_time = 5;
+}
+
+message VehicleAction_HvacClimateKeeperAction {
+  HvacClimateKeeperAction_ClimateKeeperAction_E ClimateKeeperAction = 1;
+  bool manual_override = 2;
+}
+
+message VehicleAction_SetChargingAmpsAction {
+  int32 charging_amps = 1;
+}
+
+message VehicleAction_SetCabinOverheatProtectionAction {
+  bool on = 1;
+  bool fan_only = 2;
+}
+
+message VehicleAction_SetVehicleNameAction {
+  string vehicleName = 1;
+}
+
+message VehicleAction_ChargePortDoorClose {}
+
+message VehicleAction_ChargePortDoorOpen {}
+
+message VehicleAction_SetCopTempAction {
+  ClimateState_CopActivationTemp copActivationTemp = 1;
+}
+
+message VehicleAction_VehicleControlSetPinToDriveAction {
+  bool on = 1;
+  string password = 2;
+}
+
+message VehicleAction_VehicleControlResetPinToDriveAction {}
+
+message HvacSeatHeaterActions_HvacSeatHeaterAction {
+  oneof seat_heater_level {
+    Void SEAT_HEATER_UNKNOWN = 1;
+    Void SEAT_HEATER_OFF = 2;
+    Void SEAT_HEATER_LOW = 3;
+    Void SEAT_HEATER_MED = 4;
+    Void SEAT_HEATER_HIGH = 5;
+  }
+
+  oneof seat_position {
+    Void CAR_SEAT_UNKNOWN = 6;
+    Void CAR_SEAT_FRONT_LEFT = 7;
+    Void CAR_SEAT_FRONT_RIGHT = 8;
+    Void CAR_SEAT_REAR_LEFT = 9;
+    Void CAR_SEAT_REAR_LEFT_BACK = 10;
+    Void CAR_SEAT_REAR_CENTER = 11;
+    Void CAR_SEAT_REAR_RIGHT = 12;
+    Void CAR_SEAT_REAR_RIGHT_BACK = 13;
+    Void CAR_SEAT_THIRD_ROW_LEFT = 14;
+    Void CAR_SEAT_THIRD_ROW_RIGHT = 15;
+  }
+}
+
+message HvacTemperatureAdjustmentAction_Temperature {
+  oneof type {
+    Void TEMP_UNKNOWN = 1;
+    Void TEMP_MIN = 2;
+    Void TEMP_MAX = 3;
+  }
+}
+
+message HvacTemperatureAdjustmentAction_HvacTemperatureZone {
+  oneof type {
+    Void TEMP_ZONE_UNKNOWN = 1;
+    Void TEMP_ZONE_FRONT_LEFT = 2;
+    Void TEMP_ZONE_FRONT_RIGHT = 3;
+    Void TEMP_ZONE_REAR = 4;
+  }
+}
+
+message AutoSeatClimateAction_CarSeat {
+  bool on = 1;
+  AutoSeatClimateAction_AutoSeatPosition_E seat_position = 2;
+}
